@@ -1,9 +1,6 @@
-import sys
-sys.path.append('../utils/')
-sys.path.append('../data/')
 import numpy as np
 import numpy.linalg  as LA
-from StarData import StarData, Rb_all
+from Illustris.data.StarData import StarData, Rb_all
 
 def calcV2Tensor(vcyl, weights):
 	if len(vcyl) == 0:

@@ -1,8 +1,6 @@
 '''
 Plot the velocity ellipsoids.
 '''
-import sys
-sys.path.append('../utils/')
 import numpy as np
 import numpy.linalg as LA
 import os
@@ -17,9 +15,9 @@ rc('text', usetex=True)
 rc('xtick', labelsize=12)
 rc('ytick', labelsize=12)
 rc('axes', labelsize=15)
-from StarData_Beta import StarData_Beta, Rb_all
-from util_illustris import getData
-from paths import illustris_samplepath, illustris_path
+from Illustris.beta.StarData_Beta import StarData_Beta, Rb_all
+from Illustris.utils.util_illustris import getData
+from Illustris.utils.paths import illustris_samplepath, illustris_path
 outpath = illustris_samplepath
 
 class PlotVEMap(StarData_Beta):
