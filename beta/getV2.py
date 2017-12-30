@@ -1,14 +1,12 @@
 '''
 Get the measured V2 tensors at a number of grid points and store them in a .npy file.
 '''
-import sys
-sys.path.append('../utils/')
 import numpy as np
 import os
 import argparse
-from StarData_Beta import StarData_Beta, measureV2map
-from util_illustris import getData
-from paths import illustris_samplepath, illustris_path
+from Illustris.beta.StarData_Beta import StarData_Beta, measureV2map
+from Illustris.utils.util_illustris import getData
+from Illustris.utils.paths import illustris_samplepath, illustris_path
 outpath = illustris_samplepath
 
 def main():

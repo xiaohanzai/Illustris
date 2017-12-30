@@ -1,8 +1,6 @@
 '''
 Plot beta distributions in the equatorial plane and the meridional plane.
 '''
-import sys
-sys.path.append('../utils/')
 import numpy as np
 import os
 import argparse
@@ -16,9 +14,9 @@ rc('text', usetex=True)
 rc('xtick', labelsize=10)
 rc('ytick', labelsize=10)
 rc('axes', labelsize=15)
-from StarData_Beta import StarData_Beta, Rb_all
-from util_illustris import getData
-from paths import illustris_samplepath, illustris_path
+from Illustris.beta.StarData_Beta import StarData_Beta, Rb_all
+from Illustris.utils.util_illustris import getData
+from Illustris.utils.paths import illustris_samplepath, illustris_path
 outpath = illustris_samplepath
 
 colormap = plt.get_cmap('jet')

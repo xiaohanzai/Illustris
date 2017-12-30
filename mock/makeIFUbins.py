@@ -4,8 +4,6 @@ Modified from Hongyu Li's script: https://github.com/HongyuLi2016/illustris-tool
 read img_ifu.npy (particel number map), mge.npy (mge fitting)
 and img_M.npy (mass image) to create voronoi bin for IFU
 '''
-import sys
-sys.path.append('../utils/')
 import numpy as np
 from scipy.spatial import ConvexHull
 import argparse
@@ -15,8 +13,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Circle
 from voronoi_2d_binning import voronoi_2d_binning
-import util_illustris as ui
-import paths
+import Illustris.utils.util_illustris as ui
+import Illustris.utils.paths as paths
 outpath = paths.illustris_savepath
 
 pix2kpc = ui.scale_ifu   # 1 pixel = 1 kpc

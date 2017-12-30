@@ -1,12 +1,10 @@
 '''
 Modified from Hongyu Li's script: https://github.com/HongyuLi2016/illustris-tools
 '''
-import sys
-sys.path.append('../utils/')
 import numpy as np
 from astropy.io import fits
 import argparse
-import paths
+import Illustris.utils.paths as paths
 outpath = paths.illustris_savepath
 
 def run(ifu_path):
