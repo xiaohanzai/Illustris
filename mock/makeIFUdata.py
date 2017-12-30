@@ -1,8 +1,6 @@
 '''
 Modified from Hongyu Li's script: https://github.com/HongyuLi2016/illustris-tools
 '''
-import sys
-sys.path.append('../utils/')
 import math
 import os
 import numpy as np
@@ -12,10 +10,10 @@ from sklearn.utils import resample
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 plt.switch_backend('agg')
-import util_illustris as ui
+import Illustris.utils.util_illustris as ui
 import warnings
 import argparse
-import paths
+import Illustris.utils.paths as paths
 outpath = paths.illustris_savepath
 
 def inhullminmax(x, y, hull, minl, maxl, xmin, xmax, ymin, ymax):

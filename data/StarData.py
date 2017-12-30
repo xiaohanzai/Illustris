@@ -1,8 +1,6 @@
-import sys
-sys.path.append('../utils/')
 import numpy as np
-from util_general import xyz2cyl
-from util_illustris import getData, getVc, findCenter, calcShape
+from Illustris.utils.util_general import xyz2cyl
+from Illustris.utils.util_illustris import getData, getVc, findCenter, calcShape
 
 Rb_all = 20.
 

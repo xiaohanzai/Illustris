@@ -1,20 +1,17 @@
 '''
 Modified from Hongyu Li's script: https://github.com/HongyuLi2016/illustris-tools
 '''
-import sys
-sys.path.append('../utils/')
-sys.path.append('../data/')
 import numpy as np
 import argparse
 import os
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 plt.switch_backend('agg')
-from StarData import StarData, Rb_all
-import util_illustris as ui
-from util_general import rotateCoordinates
+from Illustris.data.StarData import StarData, Rb_all
+import Illustris.utils.util_illustris as ui
+from Illustris.utils.util_general import rotateCoordinates
 import warnings
-import paths
+import Illustris.utils.paths as paths
 illustris_path = paths.illustris_path
 outpath = paths.illustris_savepath
 

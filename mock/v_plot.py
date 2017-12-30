@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../utils/')
 import os
 import numpy as np
 import matplotlib
@@ -10,7 +8,7 @@ from astropy.io import fits
 import argparse
 from JAM.utils.velocity_plot import velocity_plot
 from scipy import stats
-import paths
+import Illustris.utils.paths as paths
 outpath = paths.illustris_savepath
 
 def v_plot(x0, y0, v0, v0_err, vd, vd_err):

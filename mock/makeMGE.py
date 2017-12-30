@@ -1,8 +1,6 @@
 '''
 Modified from Hongyu Li's script: https://github.com/HongyuLi2016/illustris-tools
 '''
-import sys
-sys.path.append('../utils/')
 import numpy as np
 import os
 import sys
@@ -13,8 +11,8 @@ from sectors_photometry import sectors_photometry
 from mge_print_contours import mge_print_contours
 from find_galaxy import find_galaxy
 from mge_fit_sectors import mge_fit_sectors
-import util_illustris as ui
-import paths
+import Illustris.utils.util_illustris as ui
+import Illustris.utils.paths as paths
 outpath = paths.illustris_savepath
 
 pix2kpc = ui.scale_img   # 1 pixel = 0.5 kpc
