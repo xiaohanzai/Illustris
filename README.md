@@ -2,6 +2,8 @@
 Some functions used to handle Illustris and IllustrisTNG data. Especially designed for my prolate JAM project. Some scripts are modified from Hongyu Li's code: 
 https://github.com/HongyuLi2016/illustris-tools
 
+This is a package, so please add the corresponding path into $PYTHONPATH.
+
 ## Contents:
 * `data`: 
   * `StarData.py`: contains a most general class _StarData_.
