@@ -246,6 +246,28 @@ def calcShape(x, Rb = 20.):
 
     return ba, ca, angle_l, angle_s, Tiv
 
+def splitProgenitors(file, basepath, parttype):
+    '''
+    Split particles of a subhalo by contributions from different progenitors.
+    "file" should have a format like this:
+      snapNum             subhaloNum
+      progenitor1_snapNum progenitor1_subhaloNum
+      progenitor2_snapNum progenitor2_subhaloNum
+      ......
+    Return the index of the particles that are from progenitor1, 2, ...
+    '''
+    node = np.genfromtxt(file, dtype=int)
+    data0 = getData(basepath, node[0,0], node[0,1], parttype)
+    partID0 = data0['ParticleIDs']
+
+    inP = np.zeros((len(node)-1,len(partID0)), dtype=bool)
+    for i in range(1,len(node)):
+        data = getData(basepath, node[i,0], node[i,1], parttype)
+        partID = data['ParticleIDs']
+        inP[i-1] = np.in1d(partID0, partID)
+
+    return inP
+
 
 # def mock_img(x1, x2, L=None, bins=100, Xrange=None):
 #     if L is None:
