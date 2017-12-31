@@ -46,10 +46,11 @@ def _plotImg(img, boxsize):
     ax.set_ylabel('kpc')
     return fig
 
-def makeImg(x, v, mpart, lrpart, rotation, phi, inc, pa, Rb = Rb_all, **kwargs):
+def makeImg(x, v, mpart, lrpart, rotation, phi, inc, pa = 500, Rb = Rb_all, **kwargs):
     '''
     rotation = oblate or prolate.
-    phi inc pa are be in units of degrees.
+    phi inc are be in units of degrees.
+    You can also provide pa in kwargs.
     '''
     data = StarData(x, v, mpart, Rb = Rb, **kwargs)
         
@@ -61,7 +62,10 @@ def makeImg(x, v, mpart, lrpart, rotation, phi, inc, pa, Rb = Rb_all, **kwargs):
     data.convert2cyl(rotation)
 
     # rotate x v
-    xpart = rotateCoordinates(data.x_prin, np.radians(phi), np.radians(inc), np.radians(pa))
+    xpart = rotateCoordinates(data.x_prin, np.radians(phi), np.radians(inc), 0)
+    if pa > 360.:
+        pa = ui.calcPa(xpart, Rb = Rb)[1]
+    xpart = rotateCoordinates(xpart, 0, 0, np.radians(pa))
     vpart = rotateCoordinates(data.v_prin, np.radians(phi), np.radians(inc), np.radians(pa))
 
     # make images
@@ -73,17 +77,18 @@ def makeImg(x, v, mpart, lrpart, rotation, phi, inc, pa, Rb = Rb_all, **kwargs):
     fig_L = _plotImg(img_L, boxsize_img)
     fig_ifu = _plotImg(img_ifu, boxsize_ifu)
 
-    return img_M, img_L, img_ifu, fig_M, fig_L, fig_ifu, xpart, vpart, data.ba, data.ca
+    return img_M, img_L, img_ifu, fig_M, fig_L, fig_ifu, xpart, vpart, data.ba, data.ca, pa
 
 def run(x, v, mpart, lpart, Z, rotation, phi, inc, pa, path, Rb = Rb_all, **kwargs):
     '''
     lpart = 8 band magnitude.
     Z = metallicity.
-    phi inc pa are in units of degrees.
+    phi inc are in units of degrees.
     Save all relavent files to "path".
     '''
-    lrpart = 10**((4.58 - lpart[:, 5])/2.5)  # r band luminosity
-    img_M, img_L, img_ifu, fig_M, fig_L, fig_ifu, xpart, vpart, ba, ca = \
+    lrpart = 10**((4.58 - lpart[:, 5])/2.5)/1e10  # r band luminosity
+    mpart /= 1e10
+    img_M, img_L, img_ifu, fig_M, fig_L, fig_ifu, xpart, vpart, ba, ca, pa = \
         makeImg(x, v, mpart, lrpart, rotation, phi, inc, pa, Rb = Rb, **kwargs)
 
     np.save('{}/img_M.npy'.format(path), img_M)
@@ -102,13 +107,14 @@ def run(x, v, mpart, lpart, Z, rotation, phi, inc, pa, path, Rb = Rb_all, **kwar
         print('boxsize_ifu: {:.2f} kpc'.format(boxsize_ifu), file = ff)
         print('scale_img: {:.2f} kpc/pixel'.format(scale_img), file = ff)
         print('scale_ifu: {:.2f} kpc/pixel'.format(scale_ifu), file = ff)
-        print('Stellar mass: {:.4e} M_solar'.format(mpart.sum()), file = ff)
+        print('Stellar mass: {:.4e} M_solar'.format(mpart.sum()*1e10), file = ff)
         print(('r band luminosity: {:.4e} L_solar'
-                      .format(lrpart.sum())), file = ff)
+                      .format(lrpart.sum()*1e10)), file = ff)
         print(('Averaged M*/L: {:.3f} M_solar/L_solar'
                      .format(mpart.sum()/lrpart.sum())), file = ff)
         print('ba={:.2f}  ca={:.2f}'.format(ba, ca), file = ff)
 
+    # x in kpc, v in km/s, mpart in 10^10 M_solar, lrpart in 10^10 L_solar
     data = np.zeros([xpart.shape[0], 9])
     data[:, 0:3] = xpart
     data[:, 3:6] = vpart
@@ -124,7 +130,7 @@ def main():
     parser.add_argument('--rotation') # oblate or prolate rotation
     parser.add_argument('--phi') # let's input in units of degrees
     parser.add_argument('--inc')
-    parser.add_argument('--pa')
+    parser.add_argument('--pa', default = '500')
     args = parser.parse_args()
 
     subhaloID = args.subhaloID
