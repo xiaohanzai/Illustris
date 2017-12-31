@@ -2,7 +2,7 @@
 # Modified from Hongyu Li's script: https://github.com/HongyuLi2016/illustris-tools
 
 # make mock image -p phi -i inclination -o oblate rotatorion
-python makeImg.py --subhaloID $1 --rotation $2 --phi $3 --inc $4 --pa $5
+python makeImg.py --subhaloID $1 --rotation $2 --phi $3 --inc $4 #--pa $5
 # make stellar mge using the mock image created by illustris-make_img.py
 python makeMGE.py --subhaloID $1
 # Voronoi bin
