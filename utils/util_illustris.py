@@ -269,6 +269,62 @@ def splitProgenitors(file, basepath, parttype):
     return inP
 
 
+def calcPa(x, Rb = 20.):
+    '''
+    Get the galaxy's position angle and ellipticity.
+    Rb=20kpc, within which the calculation is done.
+    '''
+    if x.shape[1] > 2:
+        x = x[:,0:2]
+
+    q = 1.
+
+    Tiv = np.identity(2)
+
+    Vei = np.zeros((2,2))
+
+    dq = 10000.
+
+    while dq > 0.01:
+        y = np.transpose(np.dot(Tiv,np.transpose(x))) #in eigenvector coordinates
+        rn0 = np.sqrt( y[:,0]**2 + y[:,1]**2/q**2)
+        ind = np.where(rn0 < Rb)[0]
+        Np = ind.shape[0]
+
+        y1 = y[ind,0]
+        y2 = y[ind,1]
+        rn2 = rn0[ind]**2
+
+        I11 = np.sum(y1*y1/rn2)
+        I22 = np.sum(y2*y2/rn2)
+        I12 = np.sum(y1*y2/rn2)
+
+        II = [ [I11,I12], \
+               [I12,I22] ]
+
+        D,A = LA.eig(II)
+
+        order = np.argsort(D)
+        la = np.sqrt(D[ order[1] ])
+        lb = np.sqrt(D[ order[0] ])
+
+        dq = np.abs(q-lb/la)
+
+        q = lb/la
+
+        Tiv = np.dot(LA.inv(A),Tiv)
+
+    Tiv = Tiv[order[::-1],:] # x axis is the longer one
+    Vei = LA.inv(Tiv) # eigen vectors
+
+    d = np.array([1,0])
+    costh = np.dot(Vei[:,0],d)/np.sqrt(np.dot(Vei[:,0],Vei[:,0]))/np.sqrt(np.dot(d,d))
+    pa = np.arccos(costh)*180./np.pi
+
+    ba = q
+
+    return ba, pa, Tiv
+
 # def mock_img(x1, x2, L=None, bins=100, Xrange=None):
 #     if L is None:
 #         L = np.ones(len(x1))
