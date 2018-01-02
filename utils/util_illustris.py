@@ -247,20 +247,21 @@ def calcShape(x, Rb = 20.):
     return ba, ca, angle_l, angle_s, Tiv
 
 
-def calcPa(x, Rb = 20.):
+def calcPa(x, Rb = 20., weights = None):
     '''
     Get the galaxy's position angle and ellipticity.
     Rb=20kpc, within which the calculation is done.
     '''
+    if weights is None:
+        weights = np.ones(len(x))
+
     if x.shape[1] > 2:
         x = x[:,0:2]
+    x *= weights.reshape(-1,1)
 
     q = 1.
-
     Tiv = np.identity(2)
-
     Vei = np.zeros((2,2))
-
     dq = 10000.
 
     while dq > 0.01:
