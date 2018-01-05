@@ -48,7 +48,8 @@ def getData(basepath, snapNum, subhaloNum, parttype):
     if parttype == 1:
         data['Masses'] = np.ones(len(data['Coordinates']))*MdarkPart
     data['Coordinates'] /= h0
-    data['Masses'] *= massUnit
+    if parttype in [0,4]:
+        data['Masses'] *= massUnit
     return data
 
 
