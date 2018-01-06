@@ -55,18 +55,24 @@ class StarData_Beta(StarData):
 			print('R z phi must be have the same length as dR dz dphi respectively.')
 			return
 
+		xcyl = self.xcyl.copy()
+		vcyl = self.vcyl.copy()
+		mpart = self.mpart.copy()
+		if abs_z:
+			z = np.abs(z)
+			ii = xcyl[:,2] < 0.
+			vcyl[ii,2] *= -1.
+			xcyl[ii,2] *= -1.
 		Rmax = np.max(R + dR/2.)
 		Rmin = np.min(R - dR/2.)
 		zmax = np.max(z + dz/2.)
 		zmin = np.min(z - dz/2.)
-		ii = (self.xcyl[:,0] >= Rmin) & (self.xcyl[:,0] <= Rmax) & \
-		     (self.xcyl[:,2] >= zmin) & (self.xcyl[:,2] <= zmax)
-		xcyl = self.xcyl[ii].copy()
-		vcyl = self.vcyl[ii].copy()
-		mpart = self.mpart[ii].copy()
-		if abs_z:
-			z = np.abs(z)
-			xcyl[:,2] = np.abs(xcyl[:,2])
+		ii = (xcyl[:,0] >= Rmin) & (xcyl[:,0] <= Rmax) & \
+		     (xcyl[:,2] >= zmin) & (xcyl[:,2] <= zmax)
+		xcyl = xcyl[ii]
+		vcyl = vcyl[ii]
+		mpart = mpart[ii]
+		
 		weights = mpart.copy()
 		if not massweight:
 			weights = np.ones_like(weights)
@@ -262,8 +268,10 @@ def measureV2map(xcyl, vcyl, mpart, mode = 'linspace', N_Rbin = 20, N_zbin = 20,
 	If usebin, then use the equal number binning method.
 	'''
 	xcyl = xcyl.copy()
-	xcyl[:,2] = np.abs(xcyl[:,2])
 	vcyl = vcyl.copy()
+	ii = xcyl[:,2] < 0.
+	vcyl[ii,2] *= -1.
+	xcyl[ii,2] *= -1.
 	mpart = mpart.copy()
 	weights = mpart.copy()
 	if not massweight:
