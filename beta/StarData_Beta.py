@@ -111,6 +111,9 @@ class StarData_Beta(StarData):
 			mpart = mpart[~ii]
 			weights = weights[~ii]
 
+		if abs_z:
+			V *= 2.
+
 		if len(R) == 1:
 			return a11[0], a12[0], a13[0], a22[0], a23[0], a33[0], \
 			       v1[0], v2[0], v3[0], M[0], V[0], Npart[0]
@@ -302,9 +305,10 @@ def measureV2map(xcyl, vcyl, mpart, mode = 'linspace', N_Rbin = 20, N_zbin = 20,
 	v2 = a11.copy()
 	v3 = a11.copy()
 
-	nu = a11.copy()
+	M = a11.copy()
+	V = a11.copy()
 
-	NperBin = a11.copy()
+	Npart = a11.copy()
 
 	R_bin0 = a11.copy()
 	z_bin0 = a11.copy()
@@ -333,10 +337,10 @@ def measureV2map(xcyl, vcyl, mpart, mode = 'linspace', N_Rbin = 20, N_zbin = 20,
 				a11[n],a12[n],a13[n],a22[n],a23[n],a33[n],v1[n],v2[n],v3[n] = \
 				    calcV2Tensor(vcyl_tmp_tmp[ii3,:], weights_tmp_tmp[ii3])
 
-				NperBin[n] = ii3.sum()
+				Npart[n] = ii3.sum()
 
-				V = np.pi*(R_bin[j+1]**2 - R_bin[j]**2)*(z_bin[j,k+1] - z_bin[j,k])*1e9 / N_phibin
-				nu[n] = m_tmp_tmp[ii3].sum()/2./V
+				V[n] = 2*np.pi*(R_bin[j+1]**2 - R_bin[j]**2)*(z_bin[j,k+1] - z_bin[j,k])*1e9 / N_phibin
+				M[n] = m_tmp_tmp[ii3].sum()
 
 				xcyl_tmp_tmp = xcyl_tmp_tmp[~ii3,:]
 				vcyl_tmp_tmp = vcyl_tmp_tmp[~ii3,:]
@@ -359,7 +363,7 @@ def measureV2map(xcyl, vcyl, mpart, mode = 'linspace', N_Rbin = 20, N_zbin = 20,
 		mpart = mpart[~ii1]
 		weights = weights[~ii1]
 
-	return R_bin0, z_bin0, phi_bin0, a11, a12, a13, a22, a23, a33, v1, v2, v3, nu, NperBin
+	return R_bin0, z_bin0, phi_bin0, a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart
 
 # def calcGlobalAnisotropy(xcyl, vcyl, mpart, Rb, bintype = 'linear', 
 # 	                     N_Rbin = 10, N_phibin = 1, N_zbin = 10, 

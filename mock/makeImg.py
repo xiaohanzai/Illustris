@@ -142,8 +142,9 @@ def main():
     inc = float(args.inc)
     pa = float(args.pa)
 
-    os.system('mkdir -p {}/{}'.format(outpath, subhaloID))
-    path = outpath + subhaloID
+    foldername = subhaloID + '_p' + args.phi + '_i' + args.inc
+    os.system('mkdir -p {}/{}'.format(outpath, foldername))
+    path = outpath + foldername
     os.system('mkdir -p {}/imgs'.format(path))
 
     data = ui.getData(illustris_path, snapNum, subhaloNum, 4)

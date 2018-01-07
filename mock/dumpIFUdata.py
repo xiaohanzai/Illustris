@@ -91,12 +91,11 @@ def run(ifu_path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--subhaloID')
+    parser.add_argument('--foldername')
     args = parser.parse_args()
 
-    subhaloID = args.subhaloID
-    subhaloNum = int(subhaloID[7:])
-    path = outpath + subhaloID
+    foldername = args.foldername
+    path = outpath + foldername
 
     run(path+'/ifu/')
 

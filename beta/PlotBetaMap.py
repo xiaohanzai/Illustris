@@ -16,8 +16,7 @@ rc('ytick', labelsize=10)
 rc('axes', labelsize=15)
 from Illustris.beta.StarData_Beta import StarData_Beta, Rb_all
 from Illustris.utils.util_illustris import getData
-from Illustris.utils.paths import illustris_samplepath, illustris_path
-outpath = illustris_samplepath
+import Illustris.utils.paths as paths
 
 colormap = plt.get_cmap('jet')
 
@@ -140,13 +139,26 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--subhaloID')
 	parser.add_argument('--shape')
-	parser.add_argument('--snapNum', default=135)
+	parser.add_argument('--snapNum')
+	parser.add_argument('--TNG', default = False, type = bool)
+	parser.add_argument('--outpath', default = None)
 	args = parser.parse_args()
 
 	subhaloID = args.subhaloID
 	subhaloNum = int(subhaloID[7:])
 	shape = args.shape
 	snapNum = int(args.snapNum)
+
+	outpath = args.outpath
+	if outpath is None:
+		if args.TNG:
+			outpath = paths.TNG_samplepath
+		else:
+			outpath = paths.illustris_samplepath
+
+	illustris_path = paths.illustris_path
+	if args.TNG:
+		illustris_path = paths.TNG_path
 
 	os.system('mkdir -p {}/{}'.format(outpath,subhaloID))
 	path = outpath + subhaloID + '/'
