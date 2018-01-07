@@ -68,11 +68,11 @@ def run(ifu_path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--subhaloID')
+    parser.add_argument('--foldername')
     args = parser.parse_args()
     
-    subhaloID = args.subhaloID
-    path = outpath + subhaloID
+    foldername = args.foldername
+    path = outpath + foldername
     run(path+'/ifu/')
 
 if __name__ == '__main__':

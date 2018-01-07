@@ -4,18 +4,17 @@ import os
 import Illustris.mock
 import Illustris.utils.util_illustris as ui
 import Illustris.utils.paths as paths
-illustris_path = paths.illustris_path
-illustris_samplepath = paths.illustris_samplepath
-outpath = paths.illustris_savepath
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--subhaloID')
-    parser.add_argument('--snapNum', default = '135')
+    parser.add_argument('--snapNum')
     parser.add_argument('--rotation') # oblate or prolate rotation
     parser.add_argument('--phi') # let's input in units of degrees
     parser.add_argument('--inc')
-    parser.add_argument('--pa', default = '500')
+    parser.add_argument('--pa', default = 500)
+    parser.add_argument('--TNG', default = False, type = bool)
+    parser.add_argument('--outpath', default = None)
     parser.add_argument('-i', action='store_false', dest='iteration',
                       default=True, help='Iteration fit')
     parser.add_argument('-c', action='store_true', dest='circle',
@@ -31,8 +30,20 @@ def main():
     inc = float(args.inc)
     pa = float(args.pa)
 
-    os.system('mkdir -p {}/{}'.format(outpath, subhaloID))
-    path = outpath + subhaloID
+    illustris_path = paths.illustris_path
+    if args.TNG:
+        illustris_path = paths.TNG_path
+
+    outpath = args.outpath
+    if outpath is None:
+        if args.TNG:
+            outpath = paths.TNG_savepath
+        else:
+            outpath = paths.illustris_savepath
+
+    foldername = subhaloID + '_p' + args.phi + '_i' + args.inc
+    os.system('mkdir -p {}/{}'.format(outpath, foldername))
+    path = outpath + foldername
     os.system('mkdir -p {}/imgs'.format(path))
     os.system('mkdir -p {}/mge'.format(path))
     os.system('mkdir -p {}/ifu'.format(path))

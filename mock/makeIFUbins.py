@@ -181,14 +181,13 @@ def run(img_ifu_file, img_M_file, mge_file, path, circle = True):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--subhaloID')
+    parser.add_argument('--foldername')
     parser.add_argument('-c', action='store_true', dest='circle',
                       default=False, help='use circlular aperture')
     args = parser.parse_args()
 
-    subhaloID = args.subhaloID
-    subhaloNum = int(subhaloID[7:])
-    path = outpath + subhaloID
+    foldername = args.foldername
+    path = outpath + foldername
     os.system('mkdir -p %s/ifu/'%path)
     
     run(path+'/imgs/img_ifu.npy', path+'/imgs/img_M.npy', path+'/mge/mge.npy',
