@@ -107,16 +107,13 @@ def run(img_file, path, iteration = True):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--subhaloID')
+    parser.add_argument('--foldername')
     parser.add_argument('-i', action='store_false', dest='iteration',
                       default=True, help='Iteration fit')
     args = parser.parse_args()
 
-    subhaloID = args.subhaloID
-    subhaloNum = int(subhaloID[7:])
-
-    os.system('mkdir -p {}/{}'.format(outpath, subhaloID))
-    path = outpath + subhaloID
+    foldername = args.foldername
+    path = outpath + foldername
     os.system('mkdir -p {}/mge'.format(path))
 
     run(path+'/imgs/img_M.npy', path+'/mge/', args.iteration)
