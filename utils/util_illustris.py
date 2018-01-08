@@ -48,6 +48,7 @@ def getData(basepath, snapNum, subhaloNum, parttype):
     if parttype == 1:
         data['Masses'] = np.ones(len(data['Coordinates']))*MdarkPart
     data['Coordinates'] /= h0
+    # data['Coordinates'] /= (1+snap2z(snapNum)) # don't forget redshift
     if parttype in [0,4]:
         data['Masses'] *= massUnit
     return data
