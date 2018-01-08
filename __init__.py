@@ -1,4 +1,4 @@
-__all__ = ['data', 'beta', 'mock', 'utils']
+__all__ = ['data', 'beta', 'mock', 'shape', 'utils']
 
 from . import *
 
