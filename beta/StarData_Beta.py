@@ -27,8 +27,11 @@ class StarData_Beta(StarData):
 		# initialize shape
 		self.convert2cyl(shape)
 
+		# spherical coordinates
+		self.convert2sph()
+
 	def measureV2Tensor(self, R, z, phi, massweight = True, 
-	                    dR = 0.5, dz = 0.5, dphi = 2*np.pi, abs_z = True):
+		    dR = 0.5, dz = 0.5, dphi = 2*np.pi, abs_z = True):
 		'''
 		Given (R, phi, z), measure the velocity (dispersion) tensor at that point, using 
 		  particles in (R-dR/2, R+dR/2) x (phi-dphi/2, phi+dphi/2) x (z-dz/2, z+dz/2).
@@ -120,66 +123,92 @@ class StarData_Beta(StarData):
 
 		return a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart
 
-	def calcGlobalAnisotropy(self, Rb = Rb_all, bintype = 'linear', 
-	                         N_Rbin = 10, N_phibin = 1, N_zbin = 10, 
-	                         Nmin = 50, massweight = True):
-		'''
-		Calculate the global anisotropy for a galaxy. See the definitions 
-		  in section 4.2 of Cappellari et al. 2007.
-		Sample the stars inside Rb.
-		bintype = 'linear' or 'log'.
-		N_*bin are the number of bins on each axis.
-		Calculate Beta and set it as an attribute to this class.
-		'''
-		if bintype not in ['linear', 'log']:
-			print('Bintype must be either linear or log.')
-			return
-		if N_Rbin*N_phibin*N_zbin < 1e-4:
-			print('The number of bins must all be at least 1')
-			return
+	# def calcGlobalAnisotropy(self, Rb = Rb_all, bintype = 'linear', 
+	# 	    N_Rbin = 10, N_phibin = 1, N_zbin = 10, Nmin = 50, massweight = True):
+	# 	'''
+	# 	Calculate the global anisotropy for a galaxy. See the definitions 
+	# 	  in section 4.2 of Cappellari et al. 2007.
+	# 	Sample the stars inside Rb.
+	# 	bintype = 'linear' or 'log'.
+	# 	N_*bin are the number of bins on each axis.
+	# 	Calculate Beta and set it as an attribute to this class.
+	# 	'''
+	# 	if bintype not in ['linear', 'log']:
+	# 		print('Bintype must be either linear or log.')
+	# 		return
+	# 	if N_Rbin*N_phibin*N_zbin < 1e-4:
+	# 		print('The number of bins must all be at least 1')
+	# 		return
 
-		# make bins
-		phi = np.linspace(0., 2*np.pi, N_phibin+1)
-		dphi = phi[1:] - phi[0:-1]
-		phi = (phi[0:-1] + phi[1:])/2.
-		if bintype == 'linear':
-			R = np.linspace(0., Rb, N_Rbin+1)
-			z = np.linspace(0., Rb, N_zbin+1)
-		else:
-			R = np.logspace(-1.5, np.log10(Rb), N_Rbin+1)
-			z = np.logspace(-1.5, np.log10(Rb), N_zbin+1)
-		dR = R[1:] - R[0:-1]
-		dz = z[1:] - z[0:-1]
-		R = (R[1:] + R[0:-1])/2.
-		z = (z[1:] + z[0:-1])/2.
+	# 	# make bins
+	# 	phi = np.linspace(0., 2*np.pi, N_phibin+1)
+	# 	dphi = phi[1:] - phi[0:-1]
+	# 	phi = (phi[0:-1] + phi[1:])/2.
+	# 	if bintype == 'linear':
+	# 		R = np.linspace(0., Rb, N_Rbin+1)
+	# 		z = np.linspace(0., Rb, N_zbin+1)
+	# 	else:
+	# 		R = np.logspace(-1.5, np.log10(Rb), N_Rbin+1)
+	# 		z = np.logspace(-1.5, np.log10(Rb), N_zbin+1)
+	# 	dR = R[1:] - R[0:-1]
+	# 	dz = z[1:] - z[0:-1]
+	# 	R = (R[1:] + R[0:-1])/2.
+	# 	z = (z[1:] + z[0:-1])/2.
 
-		phi, z = np.meshgrid(phi, z)
-		phi = phi.reshape(-1)
-		z = z.reshape(-1)
-		phi = np.meshgrid(phi, R)[0].reshape(-1)
-		z, R = np.meshgrid(z, R)
-		z = z.reshape(-1)
-		R = R.reshape(-1)
+	# 	phi, z = np.meshgrid(phi, z)
+	# 	phi = phi.reshape(-1)
+	# 	z = z.reshape(-1)
+	# 	phi = np.meshgrid(phi, R)[0].reshape(-1)
+	# 	z, R = np.meshgrid(z, R)
+	# 	z = z.reshape(-1)
+	# 	R = R.reshape(-1)
 
-		dphi, dz = np.meshgrid(dphi, dz)
-		dphi = dphi.reshape(-1)
-		dz = dz.reshape(-1)
-		dphi = np.meshgrid(dphi, dR)[0].reshape(-1)
-		dz, dR = np.meshgrid(dz, dR)
-		dz = dz.reshape(-1)
-		dR = dR.reshape(-1)
+	# 	dphi, dz = np.meshgrid(dphi, dz)
+	# 	dphi = dphi.reshape(-1)
+	# 	dz = dz.reshape(-1)
+	# 	dphi = np.meshgrid(dphi, dR)[0].reshape(-1)
+	# 	dz, dR = np.meshgrid(dz, dR)
+	# 	dz = dz.reshape(-1)
+	# 	dR = dR.reshape(-1)
 
-		# calculate V2 tensor
-		a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart = \
-		    self.measureV2Tensor(R, z, phi, massweight, dR, dz, dphi, abs_z = True)
+	# 	# calculate V2 tensor
+	# 	a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart = \
+	# 	    self.measureV2Tensor(R, z, phi, massweight, dR, dz, dphi, abs_z = True)
 		
-		# calculate Beta
-		ii = Npart > Nmin
-		if ii.sum() == 0:
-			print('Number of bins not appropriate or Nmin too big. Exiting...')
-			return
-		Beta = 1 - np.sum((a33[ii] - v3[ii]**2)*M[ii])/np.sum((a11[ii] - v1[ii]**2)*M[ii])
-		self.Beta = Beta
+	# 	# calculate Beta
+	# 	ii = Npart > Nmin
+	# 	if ii.sum() == 0:
+	# 		print('Number of bins not appropriate or Nmin too big. Exiting...')
+	# 		return
+	# 	Beta = 1 - np.sum((a33[ii] - v3[ii]**2)*M[ii])/np.sum((a11[ii] - v1[ii]**2)*M[ii])
+	# 	self.Beta = Beta
+
+	def calcGlobalAnisotropy(self, Rb = Rb_all, massweight = True):
+		'''
+		Calculate the global anisotropy for a galaxy. No binning is used.
+		'''
+		ii = self.xsph[:,0] < Rb
+		weights = self.mpart[ii].copy()
+		if not massweight:
+			weights = np.ones_like(weights)
+		
+		sigmaVz2 = np.average(self.vcyl[ii,2]**2, weights=weights) - np.average(self.vcyl[ii,2], weights=weights)**2
+		sigmaVR2 = np.average(self.vcyl[ii,0]**2, weights=weights) - np.average(self.vcyl[ii,0], weights=weights)**2
+		self.Beta = 1 - sigmaVz2/sigmaVR2
+
+	def calcGlobalAnisotropy_sph(self, Rb = Rb_all, massweight = True):
+		'''
+		Calculate the global anisotropy in spherical coordinates. No binning is used.
+		'''
+		ii = self.xsph[:,0] < Rb
+		weights = self.mpart[ii].copy()
+		if not massweight:
+			weights = np.ones_like(weights)
+		
+		sigmaVphi2 = np.average(self.vsph[ii,1]**2, weights=weights) - np.average(self.vsph[ii,1], weights=weights)**2
+		sigmaVtheta2 = np.average(self.vsph[ii,2]**2, weights=weights) - np.average(self.vsph[ii,2], weights=weights)**2
+		sigmaVr2 = np.average(self.vsph[ii,0]**2, weights=weights) - np.average(self.vsph[ii,0], weights=weights)**2
+		self.Beta_sph = 1 - (sigmaVphi2 + sigmaVtheta2)/2./sigmaVr2
 
 	# def calcLambdaR(self, phi=None, inc=None, resolution = 0.5):
 	# 	'''
@@ -265,7 +294,7 @@ class StarData_Beta(StarData):
 # 	return calcV2Tensor(vcyl[ii], weights[ii]), Npart
 
 def measureV2map(xcyl, vcyl, mpart, mode = 'linspace', N_Rbin = 20, N_zbin = 20, 
-	             Rb = 30, N_phibin = 5, usebin = False, massweight = True):
+	    Rb = 30, N_phibin = 5, usebin = False, massweight = True):
 	'''
 	Output V2 vs R phi z. Mode can be set to linspace or logspace.
 	If usebin, then use the equal number binning method.

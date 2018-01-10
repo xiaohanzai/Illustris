@@ -15,6 +15,7 @@ from scipy.stats import binned_statistic_2d
 import re
 import warnings
 from illustris_python.snapshot import loadSubhalo
+from illustris_python.groupcat import loadSingle
 
 warnings.simplefilter("ignore")
 # util_fig.ticks_font.set_size('x-small')
@@ -48,9 +49,14 @@ def getData(basepath, snapNum, subhaloNum, parttype):
     if parttype == 1:
         data['Masses'] = np.ones(len(data['Coordinates']))*MdarkPart
     data['Coordinates'] /= h0
-    # data['Coordinates'] /= (1+snap2z(snapNum)) # don't forget redshift
+    # z = snap2z(snapNum)
+    # data['Coordinates'] /= (1 + z) # don't forget redshift
     if parttype in [0,4]:
         data['Masses'] *= massUnit
+
+    subhalo = loadSingle(basepath, snapNum, subhaloID=subhaloNum)
+    data['HalfMassRad'] = subhalo['SubhaloHalfmassRadType'][parttype] / h0 # / (1 + z)
+
     return data
 
 

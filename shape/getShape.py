@@ -66,16 +66,12 @@ def main():
     path = outpath + foldername
     os.system('mkdir -p {}/shape'.format(path))
 
-    subhalo = il.groupcat.loadSingle(illustris_path, snapNum, subhaloID=subhaloNum)
-    # z = ui.snap2z(snapNum)
-    hmr_star = subhalo['SubhaloHalfmassRadType'][4] / ui.h0 # / (1 + z)
-    hmr_dark = subhalo['SubhaloHalfmassRadType'][1] / ui.h0 # / (1 + z)
-
     data_star = ui.getData(illustris_path, snapNum, subhaloNum, 4)
     data_dark = ui.getData(illustris_path, snapNum, subhaloNum, 1)
     
-    run(data_star['Coordinates'], data_star['Masses'], hmr_star, 
-        data_dark['Coordinates'], data_dark['Masses'], hmr_dark, path+'/shape/')
+    run(data_star['Coordinates'], data_star['Masses'], data_star['HalfMassRad'], 
+        data_dark['Coordinates'], data_dark['Masses'], data_dark['HalfMassRad'], 
+        path+'/shape/')
 
 
 if __name__ == '__main__':
