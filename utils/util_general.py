@@ -24,6 +24,30 @@ def xyz2cyl(x, v):
 
 	return xcyl, vcyl
 
+def xyz2sph(x, v):
+	'''
+	Convert from (x,y,z) to (r,phi,theta).
+	'''
+	r = np.sqrt(np.sum(x**2, axis=1))
+	R = np.sqrt(x[:,0]**2 + x[:,1]**2)
+	theta = np.arccos(x[:,2]/r)
+	phi = np.arccos(x[:,0]/R)
+	id_phi = np.where(x[:,1]<0)[0]
+	phi[id_phi] = 2*np.pi - phi[id_phi]
+
+	xsph = np.zeros_like(x)
+	xsph[:,0] = r; xsph[:,1] = phi; xsph[:,2] = theta
+
+	vR = v[:,0]*x[:,0]/R + v[:,1]*x[:,1]/R
+	vphi = -v[:,0]*x[:,1]/R + v[:,1]*x[:,0]/R
+	vr = vR*np.sin(theta) + v[:,2]*np.cos(theta)
+	vtheta = -vR*np.cos(theta) + v[:,2]*np.sin(theta)
+
+	vsph = np.zeros_like(v)
+	vsph[:,0] = vr; vsph[:,1] = vphi; vsph[:,2] = vtheta
+
+	return xsph, vsph
+
 def rotateCoordinates(x, phi, inc, pa):
 	'''
 	Rotate the coordinates x. See Monnet et al.1992.
