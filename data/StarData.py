@@ -1,5 +1,5 @@
 import numpy as np
-from Illustris.utils.util_general import xyz2cyl
+from Illustris.utils.util_general import xyz2cyl, xyz2sph
 from Illustris.utils.util_illustris import getData, getVc, findCenter, calcShape
 
 Rb_all = 20.
@@ -45,4 +45,17 @@ class StarData(object):
 		self.x_prin = np.dot(self.Tiv,(self.x_ori).T).T
 		self.v_prin = np.dot(self.Tiv,(self.v_ori).T).T
 		self.xcyl, self.vcyl = xyz2cyl(self.x_prin, self.v_prin)
+
+	def convert2sph(self):
+		'''
+		Calculate position and velocities in spherical coordinates.
+		'''
+		if not hasattr(self, 'x_prin'):
+			print('Galaxy shape not determined. z axis may not be the symmetry axis.')
+			x = self.x_ori
+			v = self.v_ori
+		else:
+			x = self.x_prin
+			v = self.v_prin
+		self.xsph, self.vsph = xyz2sph(x, v)
 

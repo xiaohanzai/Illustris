@@ -7,6 +7,7 @@ import argparse
 from Illustris.beta.StarData_Beta import StarData_Beta, measureV2map
 from Illustris.utils.util_illustris import getData
 import Illustris.utils.paths as paths
+from illustris_python.groupcat import loadSingle
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -36,15 +37,18 @@ def main():
 	os.system('mkdir -p {}/{}'.format(outpath,subhaloID))
 	path = outpath + subhaloID + '/'
 
+	# subhalo = loadSingle(illustris_path, snapNum, subhaloID=subhaloNum)
+	rmax = 30 #subhalo['SubhaloHalfmassRadType'][4]*2.5/0.704
+
 	data = getData(illustris_path, snapNum, subhaloNum, 4)
 	V2data = StarData_Beta(data['Coordinates'], data['Velocities'], data['Masses'], shape)
 	# R_bin, z_bin, phi_bin, a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart = \
 	#     measureV2map(V2data.xcyl, V2data.vcyl, V2data.mpartz)
 	# beta = 1 - a33/a11
 	# np.save(path + 'V2tensor.npy', 
-	# 	   [R_bin, z_bin, phi_bin, a11, a12, a13, a22, a23, a33, v1, v2, v3, beta, M, V, Npart])
+	#          [R_bin, z_bin, phi_bin, a11, a12, a13, a22, a23, a33, v1, v2, v3, beta, M, V, Npart])
 	R_bin, z_bin, phi_bin, a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart = \
-	    measureV2map(V2data.xcyl, V2data.vcyl, V2data.mpart, N_phibin = 1)
+	    measureV2map(V2data.xcyl, V2data.vcyl, V2data.mpart, N_phibin = 1, Rb = rmax)
 	beta = 1 - a33/a11
 	f = open(path + 'V2tensor.txt', 'w')
 	for i in range(len(R_bin)):
