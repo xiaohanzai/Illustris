@@ -37,9 +37,9 @@ def main():
     outpath = args.outpath
     if outpath is None:
         if args.TNG:
-            outpath = paths.TNG_savepath
+            outpath = paths.TNG_savepath+'/data/snap%03d/' % snapNum
         else:
-            outpath = paths.illustris_savepath
+            outpath = paths.illustris_savepath+'/data/snap%03d/' % snapNum
 
     foldername = subhaloID + '_p' + args.phi + '_i' + args.inc
     os.system('mkdir -p {}/{}'.format(outpath, foldername))
