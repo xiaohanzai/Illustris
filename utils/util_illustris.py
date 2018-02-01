@@ -122,7 +122,7 @@ def snap2z(snapNum):
         return np.nan
 
 
-def findCenter(xpart, mpart=None, percent=50.0, imax=100):
+def findCenter(xpart, mpart=None, percent=20.0, imax=100):
     '''
     Find the center of mass for a galaxy.
     '''
