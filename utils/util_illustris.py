@@ -56,6 +56,7 @@ def getData(basepath, snapNum, subhaloNum, parttype):
 
     subhalo = loadSingle(basepath, snapNum, subhaloID=subhaloNum)
     data['HalfMassRad'] = subhalo['SubhaloHalfmassRadType'][parttype] / h0 # / (1 + z)
+    data['SubhaloPos'] = subhalo['SubhaloPos'] / h0
 
     return data
 
