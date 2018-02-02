@@ -35,14 +35,10 @@ def run(xpart_star, mpart_star, hmr_star, xpart_dark, mpart_dark, hmr_dark, path
     '''
     Save relavent files under "path".
     '''
-    xpart = np.concatenate((xpart_star, xpart_dark))
-    mpart = np.concatenate((mpart_star, mpart_dark))
-    xc = ui.findCenter(xpart, mpart=mpart)
-
     Rstar = np.linspace(3.0, 2.5*hmr_star, Nbin_star)
     Rdark = np.linspace(3.0, 2.5*hmr_dark, Nbin_dark)
-    axisRatiosStar, eigenVectorsStar = shape(Rstar, xpart_star-xc)
-    axisRatiosDark, eigenVectorsDark = shape(Rdark, xpart_dark-xc)
+    axisRatiosStar, eigenVectorsStar = shape(Rstar, xpart_star)
+    axisRatiosDark, eigenVectorsDark = shape(Rdark, xpart_dark)
     rst = {'Rstar': Rstar, 'hmr_star': hmr_star, 'axisRatiosStar':
            axisRatiosStar, 'eigenVectorsStar': eigenVectorsStar,
            'Rdark': Rdark, 'hmr_dark': hmr_dark, 'axisRatiosDark':
@@ -69,8 +65,8 @@ def main():
     data_star = ui.getData(illustris_path, snapNum, subhaloNum, 4)
     data_dark = ui.getData(illustris_path, snapNum, subhaloNum, 1)
     
-    run(data_star['Coordinates'], data_star['Masses'], data_star['HalfMassRad'], 
-        data_dark['Coordinates'], data_dark['Masses'], data_dark['HalfMassRad'], 
+    run(data_star['Coordinates'] - data_star['SubhaloPos'], data_star['Masses'], data_star['HalfMassRad'], 
+        data_dark['Coordinates'] - data_dark['SubhaloPos'], data_dark['Masses'], data_dark['HalfMassRad'], 
         path+'/shape/')
 
 

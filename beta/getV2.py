@@ -37,11 +37,10 @@ def main():
 	os.system('mkdir -p {}/{}'.format(outpath,subhaloID))
 	path = outpath + subhaloID + '/'
 
-	# subhalo = loadSingle(illustris_path, snapNum, subhaloID=subhaloNum)
-	rmax = 30 #subhalo['SubhaloHalfmassRadType'][4]*2.5/0.704
-
 	data = getData(illustris_path, snapNum, subhaloNum, 4)
-	V2data = StarData_Beta(data['Coordinates'], data['Velocities'], data['Masses'], shape)
+	V2data = StarData_Beta(data['Coordinates'], data['Velocities'], data['Masses'], shape, xc=data['SubhaloPos'])
+	# rmax = 30
+	rmax = data['HalfMassRad']*2.5
 	# R_bin, z_bin, phi_bin, a11, a12, a13, a22, a23, a33, v1, v2, v3, M, V, Npart = \
 	#     measureV2map(V2data.xcyl, V2data.vcyl, V2data.mpartz)
 	# beta = 1 - a33/a11

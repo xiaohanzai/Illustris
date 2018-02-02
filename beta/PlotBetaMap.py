@@ -170,7 +170,7 @@ def main():
 	cax2 = fig.add_axes([0.9, 0.12, 0.02, 0.65])
 
 	data = getData(illustris_path, snapNum, subhaloNum, 4)
-	plotdata = PlotBetaMap(data['Coordinates'], data['Velocities'], data['Masses'], shape)
+	plotdata = PlotBetaMap(data['Coordinates'], data['Velocities'], data['Masses'], shape, xc=data['SubhaloPos'])
 	fig = plotdata.map_equ(20., fig = fig, ax = ax1, cax = cax1)
 	fig = plotdata.map_meri(20., fig = fig, ax = ax2, cax = cax2)
 	fig.text(0.5, 0.9, 'subhalo' + str(subhaloNum) + ' (%s)' % shape,

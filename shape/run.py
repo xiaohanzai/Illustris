@@ -42,8 +42,8 @@ def main():
     data_star = ui.getData(illustris_path, snapNum, subhaloNum, 4)
     data_dark = ui.getData(illustris_path, snapNum, subhaloNum, 1)
     
-    Illustris.shape.getShape.run(data_star['Coordinates'], data_star['Masses'], hmr_star, 
-        data_dark['Coordinates'], data_dark['Masses'], hmr_dark, path+'/shape/')
+    Illustris.shape.getShape.run(data_star['Coordinates'] - data_star['SubhaloPos'], data_star['Masses'], hmr_star, 
+        data_dark['Coordinates'] - data_dark['SubhaloPos'], data_dark['Masses'], hmr_dark, path+'/shape/')
     Illustris.shape.plotShape.run(path+'/shape/')
 
 if __name__ == '__main__':

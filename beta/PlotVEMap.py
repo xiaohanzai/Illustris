@@ -126,7 +126,7 @@ def main():
 	fig.subplots_adjust(bottom = 0.1)
 
 	data = getData(illustris_path, snapNum, subhaloNum, 4)
-	plotdata = PlotVEMap(data['Coordinates'], data['Velocities'], data['Masses'], shape)
+	plotdata = PlotVEMap(data['Coordinates'], data['Velocities'], data['Masses'], shape, xc=data['SubhaloPos'])
 	fig = plotdata.plotVE(fig = fig, ax = ax)
 	fig.text(0.5, 0.9, 'subhalo' + str(subhaloNum) + ' (%s)' % shape, 
 		horizontalalignment = 'center', fontsize = 20)
